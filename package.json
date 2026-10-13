@@ -46,7 +46,7 @@
     "tailwindcss": "^4.0.0"
   },
   "dependencies": {
-    "@hookun/parse-animation-shorthand": "^0.1.4",
+    "@hookun/parse-animation-shorthand": "0.1.4",
     "@csstools/postcss-is-pseudo-class": "~5.0.1",
     "@csstools/postcss-oklab-function": "^4.0.0",
     "@tailwindcss/postcss": "^4.0.0",
