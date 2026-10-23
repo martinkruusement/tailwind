@@ -12,9 +12,28 @@ module.exports = (options = { debug: false }) => {
         // replace animation: *
         // with    animation-*:
         if (decl.prop === "animation") {
-          const styles = parseSingle(decl.value);
-          if (styles.duration && Number.isInteger(styles.duration)) {
-            styles.duration = `${styles.duration / 1000}s`;
+          const parsed = parseSingle(decl.value);
+          // parser stopped early, e.g. at a list comma: keep the shorthand
+          if (
+            parsed &&
+            typeof parsed.end === "number" &&
+            parsed.end < decl.value.trimEnd().length
+          ) {
+            return;
+          }
+          // parser 0.1.5+ wraps the result in { start, end, value }
+          const styles =
+            parsed &&
+            typeof parsed === "object" &&
+            parsed.value &&
+            typeof parsed.value === "object"
+              ? parsed.value
+              : parsed;
+          // parser returns milliseconds; core reads unit-less times as seconds
+          for (const key of ["duration", "delay"]) {
+            if (typeof styles[key] === "number") {
+              styles[key] = `${styles[key]}ms`;
+            }
           }
           Object.entries(styles)
             .filter(([, value]) => typeof value === "object")
